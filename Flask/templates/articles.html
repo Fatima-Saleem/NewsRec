@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommended Articles</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Add jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background: url('/static/world.gif') no-repeat center center fixed;
+            background-size: 150%;
+            color: white;
+            font-family: 'Arial', sans-serif;
+        }
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #ebab4c;
+            color: black;
+            border: none;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+        .logout-btn:hover {
+            background-color: #d9a636;
+        }
+        /* .welcome-text {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ebab4c;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        } */
+        .welcome-text {
+            text-align: center;
+            font-size: 2rem; /* Increase font size */
+            font-weight: bold;
+            font-size: 2rem;
+            color: #ebab4c;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            border: 2px solid #ebab4c; /* Add border */
+            padding: 30px; /* Add some space inside the border */
+            border-radius: 15px; /* Optional: Add rounded corners */
+            background-color: rgba(0, 0, 0, 0.8); /* Optional: Add a subtle background */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+            max-width: 600px; /* Set a maximum width */
+            margin-left: auto; /* Center horizontally */
+            margin-right: auto; /* Center horizontally */
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+        }
+        h2 {
+            color: #ebab4c;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .card {
+            background-color: #333;
+            color: white;
+            border: 1px solid #ebab4c;
+            border-radius: 10px;
+        }
+        .card-title {
+            color: #ebab4c;
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #ebab4c;
+            color: black;
+            border: none;
+            font-weight: bold;
+        }
+        .btn-primary:hover {
+            background-color: #d9a636;
+        }
+        .modal-content {
+            background-color: #333;
+            color: white;
+            border-radius: 10px;
+        }
+        .btn-secondary {
+            background-color: #555;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #777;
+        }
+    </style>
+</head>
+<body>
+    <!-- Logout Button -->
+    <button class="logout-btn" onclick="window.location.href='/logout';">Logout</button>
+
+    <!-- Welcome Text -->
+    <div class="welcome-text">
+        Welcome, {{ user_id }}
+    </div>
+    
+    <div class="container mt-3">
+        <h2 class="text-center">Recommended Articles</h2>
+        <div class="row mt-4">
+            {% for article in articles %}
+            <div class="col-md-4">
+                <div class="card">
+                    <img class="card-img-top" src="/static/categories/{{ article['Category'].lower() }}.jpg" alt="Category Image">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ article['Title'] }}</h5>
+                        <p class="card-text">{{ article['Abstract'][:50] }}...</p>
+                        <button 
+                            type="button" 
+                            class="btn btn-primary see-more" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#articleModal"
+                            data-title="{{ article['Title'] }}" 
+                            data-abstract="{{ article['Abstract'] }}">
+                            See More
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="articleModal" tabindex="-1" aria-labelledby="articleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="articleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalAbstract">...</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Populate modal with article data
+        $(document).ready(function () {
+            $('.see-more').on('click', function () {
+                const title = $(this).data('title');
+                const abstract = $(this).data('abstract');
+                
+                // Set the title and abstract in the modal
+                $('#articleModalLabel').text(title);
+                $('#modalAbstract').text(abstract);
+            });
+        });
+    </script>
+</body>
+</html>
+
